@@ -50,6 +50,8 @@ def deck_creation():
         i=i+1
     player_deck = deck[playerNo-1]                          #used to display the deck for the specific player
     display_deck.insert(0,f'{player_deck}')
+    return player_deck
+
 
 
 #This is the start up GUI for the game
@@ -58,7 +60,7 @@ clue_start.title("Clue Start up Page")
 img = PhotoImage(file = "C:/Users/johns/OneDrive/Pictures/Saved Pictures/clue-logo-7.png")     #Attached an image which is used in the welcome screen 
 ttk.Label(clue_start,image = img).pack()
 startup_message = ttk.Label(clue_start, text="Welcome to Clue!!",font=("Ariel",25)).pack(pady=15)
-
+clue_start.resizable(False,False)
 clue_start.geometry('600x550+60+50')
 player_label = ttk.Label(clue_start,text = "Enter number of players").pack(pady = 10)
 startup_players = ttk.Entry(clue_start,width = 10)
@@ -71,45 +73,63 @@ display_deck = ttk.Entry(clue_start,width = 42)
 exit = ttk.Button(clue_start, text ="Exit",command = lambda:clue_start.quit())
 startup_deck.pack(pady=10)
 display_deck.pack(pady=10)
+display=display_deck.get()
 display_label = ttk.Label(clue_start, text = "Your deck will show up in the space above").pack()
 
 
 #The following code is for the game play window and so should be done on a different window
 #I am creating another frame were the game play occurs
 def gamePlay():
-    clue_game = tk.Tk()
-    clue_game.title("Clue")
-    clue_game.geometry('600x600+50+50')
-    clue_game.resizable(False,False)
-    clue_game.columnconfigure(0,weight=2)
-    clue_game.columnconfigure(2,weight=2)
-    clue_game.columnconfigure(4,weight=2)
-    clue_game.rowconfigure(0,weight=1)
-    clue_game.rowconfigure(1,weight=1)
-    clue_game.rowconfigure(2,weight=1)
-    clue_game.rowconfigure(3,weight=1)
-    clue_game.rowconfigure(4,weight=1)
-    room1_label = tk.Label(clue_game, text = "Ballroom",font=("Ariel",14),bg="pink",borderwidth=3,relief="groove",height=5,width=20)
-    room1_label.grid(column=0,row=0,sticky=tk.W,padx=10,pady=15)
-    room2_label = tk.Label(clue_game,text = "Main Hall", font=("Ariel",14),bg="orange",borderwidth=3,relief="groove",height=5,width=20)
-    room2_label.grid(column=0,row=2,sticky=tk.NW,padx=10,pady=3)
-    room3_label = tk.Label(clue_game,text = "Lounge",font=("Ariel", 14),bg="green",borderwidth=3,relief="groove",height=5,width=20)
-    room3_label.grid(column=0,row=3,sticky=tk.W,padx=10,pady=13)
-    room4_label = tk.Label(clue_game,text ="Kitchen",font=("Ariel",14),bg="violet",borderwidth=3,relief="groove",height=5,width=20)
-    room4_label.grid(column=4,row=0,sticky=tk.E,padx=15,pady=13)
-    exit_game = ttk.Button(clue_game, text = "Exit",command = lambda:clue_game.quit())
-    
+        
+        #Configuring the board grid pattern
+        clue_game = tk.Tk()
+        clue_game.title("Clue")
+        clue_game.configure(bg="lightgrey")
+        clue_game.geometry('800x700+50+50')
+        clue_game.columnconfigure(0,weight=2)
+        clue_game.columnconfigure(2,weight=2)
+        clue_game.columnconfigure(4,weight=2)
+        clue_game.rowconfigure(0,weight=1)
+        clue_game.rowconfigure(1,weight=1)
+        clue_game.rowconfigure(2,weight=1)
+        clue_game.rowconfigure(3,weight=1)
+        clue_game.rowconfigure(4,weight=1)
+        
+        #Setting room box in the game board
+        room1_label = tk.Button(clue_game, text = "Ballroom",font=("Ariel",14),bg="pink",borderwidth=3,relief="groove",height=5,width=20,state="disabled")
+        room1_label.grid(column=0,row=0,sticky=tk.W,padx=10,pady=13)
+        room2_label = tk.Button(clue_game,text = "Main Hall", font=("Ariel",14),bg="orange",borderwidth=3,relief="groove",height=5,width=20,state="disabled")
+        room2_label.grid(column=0,row=1,sticky=tk.NW,padx=10,pady=13)
+        room3_label = tk.Button(clue_game,text = "Lounge",font=("Ariel", 14),bg="green",borderwidth=3,relief="groove",height=5,width=20,state="disabled",fg="white")
+        room3_label.grid(column=0,row=2,sticky=tk.NW,padx=10,pady=13)
+        room4_label = tk.Button(clue_game,text ="Kitchen",font=("Ariel",14),bg="violet",borderwidth=3,relief="groove",height=5,width=20,state="disabled")
+        room4_label.grid(column=4,row=0,sticky=tk.E,padx=15,pady=13)
+        room5_label = tk.Button(clue_game, text ="Bedroom",font=("Ariel",14),bg="indigo",borderwidth=3,relief="groove",height=5,width=20,state="disabled")
+        room5_label.grid(column=4,row=1,sticky=tk.NE,padx=10,pady=13)
+        room6_label = tk.Button(clue_game,text="Living Room",font=("Ariel",14),bg="lightblue",borderwidth=3,relief="groove",height=5,width=20,state="disabled")
+        room6_label.grid(column=4,row=2,sticky=tk.NE,padx=10,pady=13)
+
+        mainClue_label = tk.Label(clue_game,text="Clue",font=("Ariel",16),bg="white",borderwidth=3,relief="groove",height=8,width=15)
+        mainClue_label.grid(column=1,row=1,sticky=tk.E,padx=10,pady=13)
+
+        #def deck_list(playerDeck):
+
+         #   deck_list=Listbox(clue_game)
+          #  for i in playerDeck:
+           #     deck_list.insert(END,i)
 
 
+        display_deck = tk.Button(clue_game, text="Show your deck list",height=3,width=15)
+        display_deck.grid(column=1,row=2)
 
-
-
-
-
-
-
-
-
+        
+        
+        
+        
+        
+        
+        
+        
 start_game = tk.Button(clue_start,text = "PLAY",command=gamePlay,height =3,width= 10).pack(pady=10)
 exit.pack(side = tk.BOTTOM)
 
