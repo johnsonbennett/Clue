@@ -2,8 +2,8 @@
 #Written by Bennett Johnson
 import random
 import tkinter as tk
-from tkinter import ttk
 from tkinter import *
+from tkinter import messagebox
 
 
 suspect_list = ["Mrs Peacock","Rev Green","Colonel Mustard","Prof Plum","Miss Scarlet","Nurse White"]
@@ -33,10 +33,9 @@ total_list = suspect_list + weapon_list + room_list # Combining all the catagori
 random.shuffle(total_list)#Shuffling the list which is used for the game
 
 #This function is used to create a deck for the players
-def deck_creation():
-    player_choice = int(startup_players.get())
-    playerNo = int(player_num.get())
-    
+def deck_creation(startupPlayers,playerNum):
+    player_choice = int(startupPlayers)
+    playerNo = int(playerNum)
     deck = {} 
     for i in range(player_choice):
          deck[i] = []                                       #Creating a dictionary were we can store each player list as elements
@@ -48,8 +47,10 @@ def deck_creation():
         deck[i].append(total_list[counter])
         counter=counter+1
         i=i+1
-    player_deck = deck[playerNo-1]                          #used to display the deck for the specific player
-    display_deck.insert(0,f'{player_deck}')
+    player_deck = deck[playerNo-1]  
+    playerDeck=Listbox(clue_game,height=8,width=5)
+    for i in range(len(player_deck)):
+        playerDeck.insert(i,f'{player_deck[i]}')
     return player_deck
 
 
@@ -58,29 +59,26 @@ def deck_creation():
 clue_start = tk.Tk()
 clue_start.title("Clue Start up Page")
 img = PhotoImage(file = "C:/Users/johns/OneDrive/Pictures/Saved Pictures/clue-logo-7.png")     #Attached an image which is used in the welcome screen 
-ttk.Label(clue_start,image = img).pack()
-startup_message = ttk.Label(clue_start, text="Welcome to Clue!!",font=("Ariel",25)).pack(pady=15)
+tk.Label(clue_start,image = img).pack()
+startup_message = tk.Label(clue_start, text="Welcome to Clue!!",font=("Ariel",25)).pack(pady=15)
 clue_start.resizable(False,False)
 clue_start.geometry('600x550+60+50')
-player_label = ttk.Label(clue_start,text = "Enter number of players").pack(pady = 10)
-startup_players = ttk.Entry(clue_start,width = 10)
-startup_players.pack()
-player_num_label = ttk.Label(clue_start, text = "Enter player number").pack(pady=10)
-player_num = ttk.Entry(clue_start,width =10)
-player_num.pack(pady=5)
-startup_deck = ttk.Button(clue_start,text="Show starting deck",command = deck_creation)
-display_deck = ttk.Entry(clue_start,width = 42)
-exit = ttk.Button(clue_start, text ="Exit",command = lambda:clue_start.quit())
-startup_deck.pack(pady=10)
-display_deck.pack(pady=10)
-display=display_deck.get()
-display_label = ttk.Label(clue_start, text = "Your deck will show up in the space above").pack()
+player_label = tk.Label(clue_start,text = "Enter number of players").pack(pady = 10)
+startup_players = tk.Entry(clue_start,width = 10)
 
+startupPlayers=startup_players.get()
+startup_players.pack()
+player_num_label = tk.Label(clue_start, text = "Enter player number").pack(pady=10)
+player_num = tk.Entry(clue_start,width =10)
+player_num.pack(pady=5)
+
+playerNum=player_num.get()
+exit = tk.Button(clue_start, text ="Exit",command = lambda:clue_start.quit()) 
+display_label = tk.Label(clue_start, text = "Your deck will show up in the space above").pack()
 
 #The following code is for the game play window and so should be done on a different window
 #I am creating another frame were the game play occurs
 def gamePlay():
-        
         #Configuring the board grid pattern
         clue_game = tk.Tk()
         clue_game.title("Clue")
@@ -112,13 +110,13 @@ def gamePlay():
         mainClue_label = tk.Label(clue_game,text="Clue",font=("Ariel",16),bg="white",borderwidth=3,relief="groove",height=8,width=15)
         mainClue_label.grid(column=1,row=1,sticky=tk.E,padx=10,pady=13)
 
-        #def deck_list(playerDeck):
+        def generate_die():
+            die_num=random.randint(1,6)
+            dieNum=die_num
+            dice_display=messagebox.showinfo(title="Dice",message="The rolled value is " f'{dieNum}')
 
-         #   deck_list=Listbox(clue_game)
-          #  for i in playerDeck:
-           #     deck_list.insert(END,i)
-
-
+        die_generator=Button(clue_game,text="Roll dice",command=generate_die,borderwidth=3,relief="groove")
+        die_generator.grid(column=1,row=0)
         display_deck = tk.Button(clue_game, text="Show your deck list",height=3,width=15)
         display_deck.grid(column=1,row=2)
 
