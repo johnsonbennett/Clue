@@ -1,3 +1,37 @@
+#This is the base file for the base rule for the board game
+#Written by Bennett Johnson
+import random
+import tkinter as tk
+from tkinter import *
+from tkinter import messagebox
+
+
+suspect_list = ["Mrs Peacock","Rev Green","Colonel Mustard","Prof Plum","Miss Scarlet","Nurse White"]
+weapon_list = ["Revolver","Candlestick","Knife","Wrench","Crowbar","Hammer"]
+room_list = ["Ballroom","Main hall","Lounge","Kitchen","Bedroom","Living Room"]
+
+choice_list = []
+#This function is used to determine the solution for the game
+def gameGoal(main_list,list1,list2,list3):
+    
+    
+    choice_suspect = random.choice(list1)  #Choose a random element from the first list parameter
+    main_list.append(choice_suspect)        #Add the chosen element to the main list
+    list1.remove(choice_suspect)            #Removing the chosen element from list1 to take that from the rest of the game
+
+    choice_weapon = random.choice(list2)
+    main_list.append(choice_weapon)
+    list2.remove(choice_weapon)
+
+    choice_room = random.choice(list3)
+    main_list.append(choice_room)
+    list3.remove(choice_room)
+
+gameGoal(choice_list,suspect_list,weapon_list,room_list)
+
+total_list = suspect_list + weapon_list + room_list # Combining all the catagories into one list
+random.shuffle(total_list)#Shuffling the list which is used for the game
+
 #This is the start up GUI for the game
 clue_start = tk.Tk()
 clue_start.title("Clue Start up Page")
