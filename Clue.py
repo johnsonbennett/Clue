@@ -7,6 +7,7 @@ from tkinter import ttk
 from tkinter import messagebox
 
 
+
 suspect_list = ["Mrs Peacock","Rev Green","Colonel Mustard","Prof Plum","Miss Scarlet","Nurse White"]
 weapon_list = ["Revolver","Candlestick","Knife","Wrench","Crowbar","Hammer"]
 room_list = ["Ball Room","Main Hall","Lounge","Kitchen","Bed Room","Living Room"]
@@ -42,9 +43,8 @@ clue_start.resizable(False,False)
 
 
 def gamePlay():
-    
-    counter=5
-   
+    counter=[14]        #Since python consider immutable objects as seperate variables, using a list to perform pass by reference function
+
     clue_game = tk.Tk()
     clue_game.title("Clue")
     clue_game.configure(bg="lightgrey")
@@ -69,33 +69,33 @@ def gamePlay():
     clue_game.rowconfigure(1,weight=1)
     clue_game.rowconfigure(2,weight=1)
     clue_game.rowconfigure(4,weight=1)
-    count=3
+    
+    count=[5]
     #This function delivers clues for the player by sacrificing a chance
-    def clue_delivery(counter,total_list):
+    def clue_delivery(count,total_list):
           random_clue=random.choice(total_list)
-          answer=messagebox.askyesno(title='Validation',message='Are you sure, one of your clue will be deducted')
+          answer=messagebox.askyesno(title='Validation',message='Are you sure? One of your clue will be deducted')
           if answer:
-               counter=counter-1
                messagebox.showinfo(title='Clue',message=random_clue)
+               count[0]=count[0]-1
+               print(count[0])
+          return count
           
 
     def display_counter():
-          if(counter<2):
-               messagebox.showwarning(title='Warning',message= "Reaching limit.No of chances "  f'{counter}')
+          if(counter[0]<2):
+               messagebox.showwarning(title='Warning',message= "Reaching limit.No of chances "  f'{counter[0]}')
           else:
-               messagebox.showinfo(title='Chance',message='No of chances left: ' f'{counter}')
+               messagebox.showinfo(title='Chance',message='No of chances left: ' f'{counter[0]}')
     
    
-    count=3
+    
     def clicked(count):
-        if(count==1):
+        if(count[0]==0):
             tk.messagebox.showwarning(title='Warning',message='You used up all your clues')
             clue_choice.configure(state=tk.DISABLED)
         else:
-            tk.messagebox.showwarning(title='Warning',message='No of clues left ' f'{count}')
-            count=count-1
-        
-
+            tk.messagebox.showwarning(title='Warning',message='No of clues left ' f'{count[0]}')
 
     
         
@@ -116,7 +116,7 @@ def gamePlay():
     clue_label = tk.Label(clue_game,text="Clue",font=("Ariel",16),bg="white",borderwidth=3,relief="groove",height=8,width=15)
     clue_label.grid(column=1,row=1,padx=10,pady=13)
     starting_deck=tk.Label(clue_game,text=f'{random_deck}',bg="lightgreen",borderwidth=3,relief="groove",height=3,width=50).grid(column=1,row=3)
-    clue_choice=Button(clue_game,text='Click to receive a clue',command=lambda:[clue_delivery(counter,total_list),clicked(count)],width=30,borderwidth=3,relief='groove')
+    clue_choice=Button(clue_game,text='Click to receive a clue',command=lambda:[clue_delivery(count,total_list),clicked(count)],width=30,borderwidth=3,relief='groove')
     clue_choice.grid(column=2,row=1)
     display_counter=Button(clue_game,text='Show no of chances',command=display_counter).grid(column=2,row=2,sticky=tk.W)
     
@@ -132,13 +132,14 @@ def gamePlay():
     weapon_entry.grid(column=1,row=0,sticky=tk.S)
     room_entry=tk.Entry(clue_game)
     room_entry.grid(column=1,row=0,sticky=tk.SE)
+    print(choice_list)
     
     
     #This is the function that checks whether the player selection is the correct combination
     def searchAlgorithm(choice_list,counter):
-                  if(counter==0):
-                      messagebox.showwarning(title='Game Over',message='Game Over!! You used up all your chances')
-                      clue_game.destroy()
+                  if(counter[0]==0):
+                     messagebox.showwarning(title='Game Over',message='Game Over!! You used up all your chances')
+                     clue_game.destroy()
                   
                   entry_1=suspect_entry.get()
                   entry_2=weapon_entry.get()
@@ -152,7 +153,7 @@ def gamePlay():
                      if(choice_list[i]== entry_3):
                          correct=correct+1
                   if(correct==3):
-                        messagebox.showinfo(title='Winner',message='Congragulation,you figured it out!!!')
+                        messagebox.showinfo(title='Winner',message='Congragulation, you figured it out!!!')
                         clue_game.destroy()
 
                   if(correct==2):
@@ -163,11 +164,11 @@ def gamePlay():
                         
                   if(correct==0):
                         messagebox.showwarning(title='Feedback',message="Wrong answer Try again")
-                  messagebox.showwarning(title='Warning',message='No of chances left ' f'{counter}')
-                  counter=counter-1 
+                  counter[0]=counter[0]-1 
+                  
                   
         
-    check_selection=Button(clue_game,text="Check Answer",command=lambda:searchAlgorithm(choice_list,counter),borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
+    check_selection=Button(clue_game,text="Check Answer",command=lambda:[searchAlgorithm(choice_list,counter),count_controller(count)],borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
 
 
 
