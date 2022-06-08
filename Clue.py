@@ -8,7 +8,7 @@ from tkinter import messagebox
 
 
 
-suspect_list = ["Mrs Peacock","Rev Green","Colonel Mustard","Prof Plum","Miss Scarlet","Nurse White"]
+suspect_list = ["Mrs Peacock","Rev Green","Colonel Mustard","Prof Plum","Miss Scarlett","Nurse White"]
 weapon_list = ["Revolver","Candlestick","Knife","Wrench","Crowbar","Hammer"]
 room_list = ["Ball Room","Main Hall","Lounge","Kitchen","Bed Room","Living Room"]
 
@@ -34,7 +34,7 @@ gameGoal(choice_list,suspect_list,weapon_list,room_list)
 total_list = suspect_list + weapon_list + room_list # Combining all the catagories into one list
 
 clue_start=tk.Tk()
-clue_start.geometry('600x550')
+clue_start.geometry('600x500')
 clue_start.title('Clue Start up page')
 img = PhotoImage(file = "C:/Users/johns/OneDrive/Pictures/Saved Pictures/clue-logo-7.png")     #Attached an image which is used in the welcome screen 
 tk.Label(clue_start,image = img).pack()
@@ -97,6 +97,14 @@ def gamePlay():
         else:
             tk.messagebox.showwarning(title='Warning',message='No of clues left ' f'{count[0]}')
 
+    def total_suspect_list():
+          messagebox.showinfo(title='Info',message='Miss Peacock , Rev Green , Miss Scarlett , prof Plum , Nurse White , Colonel Mustard')
+
+    def total_weapon_list():
+          messagebox.showinfo(title='info',message='Revolver , Knife , Candlestick , Crowbar , Wrench , Hammer')
+
+    def total_room_list():
+          messagebox.showinfo(title='Info',message='Ball Room , Living Room , Lounge , Bed Room , Kitchen , Main Hall')
     
         
     #Setting room box in the game board
@@ -119,9 +127,12 @@ def gamePlay():
     clue_choice=Button(clue_game,text='Click to receive a clue',command=lambda:[clue_delivery(count,total_list),clicked(count)],width=30,borderwidth=3,relief='groove')
     clue_choice.grid(column=2,row=1)
     display_counter=Button(clue_game,text='Show no of chances',command=display_counter).grid(column=2,row=2,sticky=tk.W)
+    list_1=Button(clue_game,text='Show suspect list',command=total_suspect_list).grid(column=1,row=2,sticky=tk.NW)
+    list_2=Button(clue_game,text='Show weapon list',command=total_weapon_list).grid(column=1,row=2,sticky=tk.W)
+    list_3=Button(clue_game,text='Show room list',command=total_room_list).grid(column=1,row=2,sticky=tk.SW)
     
     
-   
+    
     final_suspect=Label(clue_game,text="Suspect Selection: ").grid(column=1,row=0,sticky=tk.W)
     final_weapon=Label(clue_game,text="Weapon Selection: ").grid(column=1,row=0)
     final_room=Label(clue_game,text="Room selection: ").grid(column=1,row=0,sticky=tk.E)
@@ -168,7 +179,7 @@ def gamePlay():
                   
                   
         
-    check_selection=Button(clue_game,text="Check Answer",command=lambda:[searchAlgorithm(choice_list,counter),count_controller(count)],borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
+    check_selection=Button(clue_game,text="Check Answer",command=lambda:searchAlgorithm(choice_list,counter),borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
 
 
 
