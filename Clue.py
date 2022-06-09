@@ -43,23 +43,36 @@ clue_start.resizable(False,False)
 
 
 def gamePlay():
-    counter=[14]        #Since python consider immutable objects as seperate variables, using a list to perform pass by reference function
+    counter1=[6]
+    counter2=[6]
+    count1=[3]
+    count2=[3]
+    click=[0]
 
     clue_game = tk.Tk()
     clue_game.title("Clue")
     clue_game.configure(bg="lightgrey")
     clue_game.geometry('800x700')
     
-    random_deck=[]                                                                  #Choosing this empty list to store the initial clue list
-    random_weapon=random.choice(weapon_list)
-    random_deck.append(random_weapon)
-    weapon_list.remove(random_weapon)                            
-    random_room=random.choice(room_list)                                             #These set of statements choose 1 card from each catagory as clue
-    random_deck.append(random_room)
-    room_list.remove(random_room)
-    random_suspect=random.choice(suspect_list)
-    random_deck.append(random_suspect)
-    suspect_list.remove(random_suspect)
+    random_deck_1=[] 
+    random_deck_2=[]                                                                        #Choosing  empty lists to store the initial clue list for both players
+    random_weapon_1=random.choice(weapon_list)
+    random_weapon_2=random.choice(weapon_list)
+    random_deck_1.append(random_weapon_1)
+    random_deck_2.append(random_weapon_2)
+    weapon_list.remove(random_weapon_1)                            
+    
+    random_room_1=random.choice(room_list)  
+    random_room_2=random.choice(room_list)                                                                    #These set of statements choose 1 card from each catagory as clue
+    random_deck_1.append(random_room_1)
+    random_deck_2.append(random_room_2)
+    room_list.remove(random_room_2)
+    
+    random_suspect_1=random.choice(suspect_list)
+    random_suspect_2=random.choice(suspect_list)
+    random_deck_1.append(random_suspect_1)
+    random_deck_2.append(random_suspect_2)
+    suspect_list.remove(random_suspect_1)
     
     #Configuring board grid layout
     clue_game.columnconfigure(0,weight=2)
@@ -70,42 +83,59 @@ def gamePlay():
     clue_game.rowconfigure(2,weight=1)
     clue_game.rowconfigure(4,weight=1)
     
-    count=[5]
-    #This function delivers clues for the player by sacrificing a chance
-    def clue_delivery(count,total_list):
+    # This function is used to switch the player information
+    def switch_player(count1,count2,click):
+        if(counter1[0]<=0):
+             messagebox.showwarning(title='Game Over',message='Game Over!! You used up all your chances. The selection was ' f'{choice_list}')
+             clue_game.destroy()
+        if(counter2[0]<=0):
+             messagebox.showwarning(title='Game Over',message='Game Over!! You used up all your chances.')
+
+        if(click[0]==0):
+            player_label.configure(text='Player 2')
+            starting_deck.configure(text=f'{random_deck_2}')    #This if statement switch the game from player 1 to player 2
+            count1[0]=count1[0]-1                               #The click list act as a manual booleon and changes between 0 and 1. When 0,1 is added and becomes 1
+            click[0]=click[0]+1                                 #When click is 0, count1 and counter1 decrements. Despite the name, these variables control player 2
+        else:
+            player_label.configure(text='Player 1')
+            starting_deck.configure(text=f'{random_deck_1}')    #Vice versa
+            count2[0]=count2[0]-1                               #When click is 1, count2 and counter2 decrements. These counters control player 1
+            click[0]=click[0]-1                                 #This condition activates when click is 1 and we subtract 1 to change it back to 0
+        
+    
+    
+    #This function delivers clues for the player
+    def clue_delivery(total_list):
           random_clue=random.choice(total_list)
           answer=messagebox.askyesno(title='Validation',message='Are you sure? One of your clue will be deducted')
           if answer:
                messagebox.showinfo(title='Clue',message=random_clue)
-               count[0]=count[0]-1
-               print(count[0])
-          return count
+               
           
 
-    def display_counter():
-          if(counter[0]<2):
-               messagebox.showwarning(title='Warning',message= "Reaching limit.No of chances "  f'{counter[0]}')
-          else:
-               messagebox.showinfo(title='Chance',message='No of chances left: ' f'{counter[0]}')
-    
+    def display_counter(click,counter1,counter2,choice_list):
+         if(click[0]==0):                                                   #This if statement is used to determine which counter to decrement
+            messagebox.showinfo(title='Clue',message='No of chances left ' f'{counter1[0]}')
+            if(count1[0]==0):                                               #This if statement tracks when the count becomes 0 and disables the button
+                messagebox.showerror(title='Clue',message='You used up all your chances!! The combination was ' f'{choice_list}')
+                clue_choice.configure(state=DISABLED)
+         else:
+            messagebox.showinfo(title='Clue',message='No of chance left ' f'{counter2[0]}')
+            if(count2[0]==0):
+                 messagebox.showerror(title='Clue',message='You used up all your chance!! The combination is ' f'{choice_list}')
    
-    
-    def clicked(count):
-        if(count[0]==0):
-            tk.messagebox.showwarning(title='Warning',message='You used up all your clues')
-            clue_choice.configure(state=tk.DISABLED)
+    #This function keep track on the number of clues used. The mechanics is same as display_counter function but decrements count
+    def clicked(count1,count2,click):
+        if(click[0]==0):
+            messagebox.showinfo(title='Clue',message='No of clues left ' f'{count1[0]}')    
+            if(count1[0]==0):
+                messagebox.showerror(title='Clue',message='You used up all your clues!!')
+                clue_choice.configure(state=DISABLED)
         else:
-            tk.messagebox.showwarning(title='Warning',message='No of clues left ' f'{count[0]}')
-
-    def total_suspect_list():
-          messagebox.showinfo(title='Info',message='Miss Peacock , Rev Green , Miss Scarlett , prof Plum , Nurse White , Colonel Mustard')
-
-    def total_weapon_list():
-          messagebox.showinfo(title='info',message='Revolver , Knife , Candlestick , Crowbar , Wrench , Hammer')
-
-    def total_room_list():
-          messagebox.showinfo(title='Info',message='Ball Room , Living Room , Lounge , Bed Room , Kitchen , Main Hall')
-    
+            messagebox.showinfo(title='Clue',message='No of clues left ' f'{count2[0]}')
+            if(count2[0]==0):
+                 messagebox.showerror(title='Clue',message='You used up all your clues!!')
+                 
         
     #Setting room box in the game board
     #Clicking room buttons should reveal a random clue for the player and the counter should go down by 1
@@ -123,15 +153,25 @@ def gamePlay():
     room.grid(column=4,row=2,sticky=tk.NE,padx=10,pady=13)
     clue_label = tk.Label(clue_game,text="Clue",font=("Ariel",16),bg="white",borderwidth=3,relief="groove",height=8,width=15)
     clue_label.grid(column=1,row=1,padx=10,pady=13)
-    starting_deck=tk.Label(clue_game,text=f'{random_deck}',bg="lightgreen",borderwidth=3,relief="groove",height=3,width=50).grid(column=1,row=3)
-    clue_choice=Button(clue_game,text='Click to receive a clue',command=lambda:[clue_delivery(count,total_list),clicked(count)],width=30,borderwidth=3,relief='groove')
+    starting_deck=tk.Label(clue_game,text=f'{random_deck_1}',bg="lightgreen",borderwidth=3,relief="groove",height=3,width=50)
+    starting_deck.grid(column=1,row=3)
+    
+    clue_choice=Button(clue_game,text='Click to receive a clue',command=lambda:[clue_delivery(total_list),clicked(click,count1,count2),switch_player(count1,count2,click)],width=30,borderwidth=3,relief='groove')
     clue_choice.grid(column=2,row=1)
-    display_counter=Button(clue_game,text='Show no of chances',command=display_counter).grid(column=2,row=2,sticky=tk.W)
-    list_1=Button(clue_game,text='Show suspect list',command=total_suspect_list).grid(column=1,row=2,sticky=tk.NW)
-    list_2=Button(clue_game,text='Show weapon list',command=total_weapon_list).grid(column=1,row=2,sticky=tk.W)
-    list_3=Button(clue_game,text='Show room list',command=total_room_list).grid(column=1,row=2,sticky=tk.SW)
     
+    displayCounter=Button(clue_game,text='Show no of chances',command=lambda:display_counter(click,counter1,counter2,choice_list))
+    displayCounter.grid(column=2,row=2,sticky=tk.W)
     
+    player_label=Label(clue_game,text='Player 1',bg='lightgreen',font=('Ariel',14))
+    player_label.grid(column=1,row=0,sticky=tk.N)
+
+    total_deck_list=  ["No Selection","Mrs Peacock","Rev Green","Colonel Mustard","Prof Plum",
+                       "Miss Scarlett","Nurse White","Revolver","Candlestick","Knife","Wrench","Crowbar","Hammer"
+                       "Ball Room","Main Hall","Lounge","Kitchen","Bed Room","Living Room"]
+
+    deck_combo=ttk.Combobox(clue_game,values=total_deck_list)
+    deck_combo.grid(column=1,row=2,sticky=tk.W)
+           
     
     final_suspect=Label(clue_game,text="Suspect Selection: ").grid(column=1,row=0,sticky=tk.W)
     final_weapon=Label(clue_game,text="Weapon Selection: ").grid(column=1,row=0)
@@ -147,11 +187,7 @@ def gamePlay():
     
     
     #This is the function that checks whether the player selection is the correct combination
-    def searchAlgorithm(choice_list,counter):
-                  if(counter[0]==0):
-                     messagebox.showwarning(title='Game Over',message='Game Over!! You used up all your chances')
-                     clue_game.destroy()
-                  
+    def searchAlgorithm(choice_list):
                   entry_1=suspect_entry.get()
                   entry_2=weapon_entry.get()
                   entry_3=room_entry.get()
@@ -175,11 +211,11 @@ def gamePlay():
                         
                   if(correct==0):
                         messagebox.showwarning(title='Feedback',message="Wrong answer Try again")
-                  counter[0]=counter[0]-1 
+                  
                   
                   
         
-    check_selection=Button(clue_game,text="Check Answer",command=lambda:searchAlgorithm(choice_list,counter),borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
+    check_selection=Button(clue_game,text="Check Answer",command=lambda:[searchAlgorithm(choice_list),switch_player(counter1,counter2,click)],borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
 
 
 
