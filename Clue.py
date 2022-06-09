@@ -90,6 +90,7 @@ def gamePlay():
              clue_game.destroy()
         if(counter2[0]<=0):
              messagebox.showwarning(title='Game Over',message='Game Over!! You used up all your chances.')
+        
 
         if(click[0]==0):
             player_label.configure(text='Player 2')
@@ -211,11 +212,13 @@ def gamePlay():
                         
                   if(correct==0):
                         messagebox.showwarning(title='Feedback',message="Wrong answer Try again")
+
+                  
                   
                   
                   
         
-    check_selection=Button(clue_game,text="Check Answer",command=lambda:[searchAlgorithm(choice_list),switch_player(counter1,counter2,click)],borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
+    check_selection=Button(clue_game,text="Check Answer",command=lambda:[switch_player(counter1,counter2,click),searchAlgorithm(choice_list)],borderwidth=3,relief="groove",bg="pink").grid(column=1,row=2,sticky=tk.N)
 
 
 
